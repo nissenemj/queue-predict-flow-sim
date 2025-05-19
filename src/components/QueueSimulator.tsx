@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { Separator } from "@/components/ui/separator";
+import { BarChart } from "lucide-react";
 import SimulationChart from './SimulationChart';
 import SimulationResult from './SimulationResult';
 
@@ -61,12 +61,12 @@ const QueueSimulator = () => {
 
   // Update a param value
   const updateParam = (param: keyof SimulationParams, value: number) => {
-    setParams(prev => ({ ...prev, [param]: value }));
+    setParams(prevParams => ({ ...prevParams, [param]: value }));
     
     // If we're in "add slots" mode, update interventionSlots automatically
     if (param === 'slotsPerWeek' && interventionType === 'add') {
-      const addedSlots = Math.max(params.interventionSlots - prev.slotsPerWeek, 0);
-      setParams(prev => ({ ...prev, interventionSlots: value + addedSlots }));
+      const addedSlots = Math.max(params.interventionSlots - params.slotsPerWeek, 0);
+      setParams(prevParams => ({ ...prevParams, interventionSlots: value + addedSlots }));
     }
   };
 
@@ -77,7 +77,7 @@ const QueueSimulator = () => {
     if (value === 'add') {
       // When switching to "add" mode, recalculate interventionSlots as current slots + added slots
       const addedSlots = 2; // Default added slots
-      setParams(prev => ({ ...prev, interventionSlots: prev.slotsPerWeek + addedSlots }));
+      setParams(prevParams => ({ ...prevParams, interventionSlots: prevParams.slotsPerWeek + addedSlots }));
     }
   };
 
@@ -85,10 +85,10 @@ const QueueSimulator = () => {
   const handleInterventionSlotsChange = (value: number) => {
     if (interventionType === 'add') {
       // In "add" mode, value represents the added slots
-      setParams(prev => ({ ...prev, interventionSlots: prev.slotsPerWeek + value }));
+      setParams(prevParams => ({ ...prevParams, interventionSlots: prevParams.slotsPerWeek + value }));
     } else {
       // In "change" mode, value is the absolute number of slots
-      setParams(prev => ({ ...prev, interventionSlots: value }));
+      setParams(prevParams => ({ ...prevParams, interventionSlots: value }));
     }
   };
 
