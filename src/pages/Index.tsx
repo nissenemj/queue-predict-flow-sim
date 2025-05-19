@@ -12,7 +12,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { ChevronDown, ChevronUp, InfoIcon, BarChart, Download, FileText } from "lucide-react";
+import { ChevronDown, ChevronUp, InfoIcon, BarChart, Download, FileText, Table } from "lucide-react";
 import QueueSimulator from '@/components/QueueSimulator';
 import { 
   Collapsible,
@@ -24,6 +24,7 @@ import { saveAs } from 'file-saver';
 
 const Index = () => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isFormatInfoOpen, setIsFormatInfoOpen] = useState(false);
   
   // Function to download a template Excel file for users
   const downloadTemplate = () => {
@@ -103,6 +104,69 @@ const Index = () => {
               Lataa Excel-lomakepohja
             </Button>
             
+            <Collapsible
+              open={isFormatInfoOpen}
+              onOpenChange={setIsFormatInfoOpen}
+              className="bg-white rounded-lg border shadow-sm"
+            >
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full flex justify-between p-4 h-auto">
+                  <div className="flex items-center">
+                    <Table className="h-5 w-5 mr-2 text-blue-600" />
+                    <span className="font-medium">Excel-tiedoston muoto</span>
+                  </div>
+                  {isFormatInfoOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="p-4 pt-0 text-sm text-gray-600 space-y-2">
+                <p>
+                  Excel-tiedoston tulee sisältää seuraavat sarakkeet ja tiedot:
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full border-collapse border border-gray-300 mt-2">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border border-gray-300 px-4 py-2">Sarake</th>
+                        <th className="border border-gray-300 px-4 py-2">Tieto</th>
+                        <th className="border border-gray-300 px-4 py-2">Muoto</th>
+                        <th className="border border-gray-300 px-4 py-2">Esimerkki</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="border border-gray-300 px-4 py-2">A</td>
+                        <td className="border border-gray-300 px-4 py-2">Päivämäärä</td>
+                        <td className="border border-gray-300 px-4 py-2">YYYY-MM-DD</td>
+                        <td className="border border-gray-300 px-4 py-2">2025-01-01</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 px-4 py-2">B</td>
+                        <td className="border border-gray-300 px-4 py-2">Saapuneet potilaat</td>
+                        <td className="border border-gray-300 px-4 py-2">Numero</td>
+                        <td className="border border-gray-300 px-4 py-2">12</td>
+                      </tr>
+                      <tr>
+                        <td className="border border-gray-300 px-4 py-2">C</td>
+                        <td className="border border-gray-300 px-4 py-2">Keskimääräinen odotusaika</td>
+                        <td className="border border-gray-300 px-4 py-2">Numero (päivinä)</td>
+                        <td className="border border-gray-300 px-4 py-2">45</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-2">
+                  <strong>Huomioitavaa:</strong>
+                </p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Ensimmäisellä rivillä tulee olla sarakeotsikot</li>
+                  <li>Päivämäärien tulee olla aikajärjestyksessä (viikoittain tai kuukausittain)</li>
+                  <li>Saapuneet potilaat = Jonoon lisättyjen potilaiden määrä kyseisellä aikavälillä</li>
+                  <li>Odotusaika = Keskimääräinen odotusaika päivissä kyseisellä aikavälillä</li>
+                  <li>Voit ladata valmiin lomakepohjan yllä olevasta napista</li>
+                </ul>
+              </CollapsibleContent>
+            </Collapsible>
+
             <Collapsible
               open={isInfoOpen}
               onOpenChange={setIsInfoOpen}
