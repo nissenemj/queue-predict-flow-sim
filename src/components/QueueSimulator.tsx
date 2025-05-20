@@ -417,8 +417,8 @@ const QueueSimulator = () => {
                       id="initialQueueSizeSlider"
                       value={[params.initialQueueSize]} 
                       min={0} 
-                      max={500}
-                      step={10}
+                      max={2000}
+                      step={50}
                       onValueChange={(value) => updateParam('initialQueueSize', value[0])}
                       className="flex-grow"
                     />
