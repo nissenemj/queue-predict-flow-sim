@@ -394,7 +394,7 @@ const QueueSimulator = () => {
                       id="slotsPerWeekSlider"
                       value={[params.slotsPerWeek]} 
                       min={1} 
-                      max={50}
+                      max={100}
                       step={1}
                       onValueChange={(value) => updateParam('slotsPerWeek', value[0])}
                       className="flex-grow"
@@ -466,7 +466,7 @@ const QueueSimulator = () => {
                         id="addedSlotsSlider"
                         value={[params.interventionSlots - params.slotsPerWeek]} 
                         min={1} 
-                        max={20}
+                        max={50}
                         step={1}
                         onValueChange={(value) => handleInterventionSlotsChange(value[0])}
                         className="flex-grow"
@@ -492,7 +492,7 @@ const QueueSimulator = () => {
                         id="interventionSlotsSlider"
                         value={[params.interventionSlots]} 
                         min={1} 
-                        max={50}
+                        max={100}
                         step={1}
                         onValueChange={(value) => updateParam('interventionSlots', value[0])}
                         className="flex-grow"
