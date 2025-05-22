@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fi">
+	<head>
+		<!-- Google tag (gtag.js) -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-Y0Q3WZJXYX"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+
+			gtag("config", "G-Y0Q3WZJXYX");
+		</script>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>
+			Terveydenhuollon simulaattori | Päivystyksen potilasvirta ja leikkausjonon
+			optimointi
+		</title>
+		<meta
+			name="description"
+			content="Terveydenhuollon simulaattori auttaa optimoimaan päivystyksen potilasvirtaa ja leikkausjonoja. Suunnittele resursseja, ennusta odotusaikoja ja paranna tehokkuutta."
+		/>
+		<meta
+			name="keywords"
+			content="terveydenhuolto, simulaattori, päivystys, potilasvirta, leikkausjono, resurssien optimointi, sairaala, hyvinvointialue, odotusaika, käyttöaste"
+		/>
+		<meta name="author" content="Terveydenhuollon simulaattori" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta
+			property="og:url"
+			content="https://terveydenhuollon-simulaattori.fi/"
+		/>
+		<meta
+			property="og:title"
+			content="Terveydenhuollon simulaattori | Päivystyksen potilasvirta ja leikkausjonon optimointi"
+		/>
+		<meta
+			property="og:description"
+			content="Optimoi terveydenhuollon resursseja, ennusta odotusaikoja ja paranna tehokkuutta simulaattorin avulla."
+		/>
+		<meta
+			property="og:image"
+			content="https://terveydenhuollon-simulaattori.fi/og-image.jpg"
+		/>
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta
+			property="twitter:url"
+			content="https://terveydenhuollon-simulaattori.fi/"
+		/>
+		<meta
+			property="twitter:title"
+			content="Terveydenhuollon simulaattori | Päivystyksen potilasvirta ja leikkausjonon optimointi"
+		/>
+		<meta
+			property="twitter:description"
+			content="Optimoi terveydenhuollon resursseja, ennusta odotusaikoja ja paranna tehokkuutta simulaattorin avulla."
+		/>
+		<meta
+			property="twitter:image"
+			content="https://terveydenhuollon-simulaattori.fi/og-image.jpg"
+		/>
+
+		<!-- Favicon -->
+		<link rel="icon" type="image/png" href="favicon.png" />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href="https://terveydenhuollon-simulaattori.fi/" />
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+		<link rel="stylesheet" href="styles.css" />
+
+		<!-- Structured Data -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "SoftwareApplication",
+				"name": "Terveydenhuollon simulaattori",
+				"applicationCategory": "HealthApplication",
+				"operatingSystem": "Web",
+				"offers": {
+					"@type": "Offer",
+					"price": "0",
+					"priceCurrency": "EUR"
+				},
+				"description": "Terveydenhuollon simulaattori auttaa optimoimaan päivystyksen potilasvirtaa ja leikkausjonoja. Suunnittele resursseja, ennusta odotusaikoja ja paranna tehokkuutta."
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="container">
+			<header>
+				<h1>Terveydenhuollon simulaattori</h1>
+				<p class="intro-text">
+					Optimoi terveydenhuollon resursseja, ennusta odotusaikoja ja paranna
+					tehokkuutta simulaattorin avulla. Tämä työkalu auttaa terveydenhuollon
+					ammattilaisia ja päättäjiä suunnittelemaan resursseja tehokkaasti.
+				</p>
+			</header>
+
+			<main>
+				<div class="main-tabs">
+					<div class="main-tab active" data-main-tab="er-flow">
+						Päivystyksen potilasvirta
+					</div>
+					<div class="main-tab" data-main-tab="queue-simulator">
+						Leikkausjonon simulaattori
+					</div>
+				</div>
+
+				<!-- ER Flow Simulator -->
+				<div class="main-tab-content active" id="er-flow">
+					<div class="tabs">
+						<div class="tab active" data-tab="parameters">Parametrit</div>
+						<div class="tab" data-tab="results">Tulokset</div>
+						<div class="tab" data-tab="comparison">Vertailu</div>
+						<div class="tab" data-tab="help">Ohje</div>
+					</div>
+
+					<div class="tab-content active" id="parameters">
+						<div class="card">
+							<h2>Päivystyksen potilasvirran simulaatioparametrit</h2>
+							<p class="simulator-description">
+								Mallinna päivystyksen potilasvirtaa ja resurssien käyttöä eri
+								vuorokauden aikoina. Tämä simulaattori auttaa optimoimaan
+								henkilöstöresursseja ja vuodepaikkoja päivystyksen ja osastojen
+								tehokkaan toiminnan varmistamiseksi.
+							</p>
+
+							<div class="grid">
+								<div>
+									<h3>Saapumistiheydet (potilasta/tunti)</h3>
+									<div class="form-group">
+										<label for="morning-rate">Aamu (6-12):</label>
+										<input
+											type="number"
+											id="morning-rate"
+											value="8"
+											min="0"
+											step="0.1"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="afternoon-rate">Iltapäivä (12-18):</label>
+										<input
+											type="number"
+											id="afternoon-rate"
+											value="7"
+											min="0"
+											step="0.1"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="evening-rate">Ilta (18-24):</label>
+										<input
+											type="number"
+											id="evening-rate"
+											value="5"
+											min="0"
+											step="0.1"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="night-rate">Yö (0-6):</label>
+										<input
+											type="number"
+											id="night-rate"
+											value="3"
+											min="0"
+											step="0.1"
+										/>
+									</div>
+								</div>
+
+								<div>
+									<h3>Henkilöstöresurssit eri vuoroissa</h3>
+									<div class="form-group">
+										<label for="doctors-day">Lääkärit (aamu/päivä 7-15):</label>
+										<input type="number" id="doctors-day" value="6" min="1" />
+									</div>
+									<div class="form-group">
+										<label for="doctors-evening">Lääkärit (ilta 15-23):</label>
+										<input
+											type="number"
+											id="doctors-evening"
+											value="4"
+											min="1"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="doctors-night">Lääkärit (yö 23-7):</label>
+										<input type="number" id="doctors-night" value="2" min="1" />
+									</div>
+									<div class="form-group">
+										<label for="nurses-day">Hoitajat (aamu/päivä 7-15):</label>
+										<input type="number" id="nurses-day" value="12" min="1" />
+									</div>
+									<div class="form-group">
+										<label for="nurses-evening">Hoitajat (ilta 15-23):</label>
+										<input
+											type="number"
+											id="nurses-evening"
+											value="10"
+											min="1"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="nurses-night">Hoitajat (yö 23-7):</label>
+										<input type="number" id="nurses-night" value="6" min="1" />
+									</div>
+								</div>
+
+								<div>
+									<h3>Vuodepaikat</h3>
+									<div class="form-group">
+										<label for="ed-beds">Päivystyksen vuodepaikat:</label>
+										<input type="number" id="ed-beds" value="50" min="1" />
+									</div>
+									<div class="form-group">
+										<label for="ward-beds">Osastojen vuodepaikat:</label>
+										<input type="number" id="ward-beds" value="300" min="1" />
+									</div>
+								</div>
+
+								<div>
+									<h3>Simulaatioasetukset</h3>
+									<div class="form-group">
+										<label for="duration">Kesto (päiviä):</label>
+										<input
+											type="number"
+											id="duration"
+											value="30"
+											min="1"
+											max="365"
+										/>
+									</div>
+									<div class="form-group">
+										<label for="scenario">Valmis skenaario:</label>
+										<select id="scenario">
+											<option value="baseline">Perusskenaario</option>
+											<option value="staff-plus">Henkilöstö +20%</option>
+											<option value="staff-minus">Henkilöstö -20%</option>
+											<option value="beds-plus">Vuodepaikat +20%</option>
+											<option value="high-load">Korkea kuormitus</option>
+											<option value="custom">Mukautettu</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div style="margin-top: 20px; text-align: center">
+								<button id="run-simulation" class="secondary">
+									Suorita simulaatio
+								</button>
+								<button
+									id="save-for-comparison"
+									style="
+										background-color: #8e44ad;
+										margin-left: 10px;
+										position: relative;
+									"
+								>
+									Tallenna vertailuun
+									<span id="save-feedback" class="save-feedback">✓</span>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-content" id="results">
+						<div class="card">
+							<h2>Simulaation tulokset</h2>
+							<div id="results-content" style="display: none">
+								<div class="grid">
+									<div class="card kpi-card">
+										<h3>Keskimääräinen odotusaika</h3>
+										<div class="kpi-value" id="avg-wait">--</div>
+										<div>minuuttia</div>
+									</div>
+
+									<div class="card kpi-card">
+										<h3>Keskimääräinen hoitoaika</h3>
+										<div class="kpi-value" id="avg-los">--</div>
+										<div>päivää</div>
+									</div>
+
+									<div class="card kpi-card">
+										<h3>Päivystyksen käyttöaste</h3>
+										<div class="kpi-value" id="ed-occupancy">--</div>
+										<div>prosenttia</div>
+									</div>
+
+									<div class="card kpi-card">
+										<h3>Osastojen käyttöaste</h3>
+										<div class="kpi-value" id="ward-occupancy">--</div>
+										<div>prosenttia</div>
+									</div>
+								</div>
+
+								<div class="chart-container">
+									<canvas id="occupancy-chart"></canvas>
+								</div>
+
+								<div class="chart-container">
+									<canvas id="wait-time-chart"></canvas>
+								</div>
+							</div>
+							<div id="no-results" style="text-align: center; padding: 40px">
+								<p>
+									Suorita ensin simulaatio Parametrit-välilehdeltä nähdäksesi
+									tulokset.
+								</p>
+								<button id="go-to-parameters">Siirry parametreihin</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-content" id="comparison">
+						<div class="card">
+							<h2>Simulaatioiden vertailu</h2>
+							<div
+								id="no-comparison-data"
+								style="text-align: center; padding: 20px"
+							>
+								<p>
+									Ei tallennettuja simulaatioita vertailuun. Suorita
+									simulaatioita ja tallenna ne vertailuun "Tallenna
+									vertailuun"-painikkeella.
+								</p>
+							</div>
+							<div id="comparison-content" style="display: none">
+								<div class="saved-simulations-list" style="margin-bottom: 20px">
+									<h3>Tallennetut simulaatiot</h3>
+									<div id="saved-simulations-container"></div>
+								</div>
+
+								<div class="comparison-charts">
+									<h3>KPI-vertailu</h3>
+									<div class="chart-container">
+										<canvas id="kpi-comparison-chart"></canvas>
+									</div>
+
+									<h3>Vuodepaikkojen käyttöasteen vertailu</h3>
+									<div class="chart-container">
+										<canvas id="occupancy-comparison-chart"></canvas>
+									</div>
+
+									<h3>Odotusaikojen vertailu</h3>
+									<div class="chart-container">
+										<canvas id="wait-time-comparison-chart"></canvas>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="tab-content" id="help">
+						<div class="card">
+							<h2>Käyttöohje</h2>
+							<h3>Yleiskuvaus</h3>
+							<p>
+								Tämä simulaattori mallintaa potilasvirtaa hyvinvointialueen
+								päivystyksessä ja vuodeosastoilla. Simulaattorilla voit arvioida
+								resurssien riittävyyttä eri tilanteissa ja tunnistaa
+								pullonkauloja.
+							</p>
+
+							<div class="model-explanation">
+								<h3>Simulaatiomallin perusteet selkokielellä</h3>
+								<p>Simulaatiomalli perustuu seuraaviin periaatteisiin:</p>
+								<ol>
+									<li>
+										<strong>Potilaiden saapuminen</strong> vaihtelee
+										vuorokaudenajan mukaan. Aamulla ja päivällä saapuu enemmän
+										potilaita kuin yöllä. Viikonloppuisin saapuu enemmän
+										potilaita kuin arkipäivisin.
+									</li>
+									<li>
+										<strong>Henkilöstöresurssit</strong> vaikuttavat
+										käänteisesti odotusaikoihin ja käyttöasteisiin:
+										<ul>
+											<li>Enemmän henkilöstöä → lyhyemmät odotusajat</li>
+											<li>
+												Enemmän henkilöstöä → tehokkaampi toiminta → pienempi
+												vuodepaikkojen käyttöaste
+											</li>
+										</ul>
+									</li>
+									<li>
+										<strong>Työvuorot</strong> vaikuttavat saatavilla oleviin
+										resursseihin: yleensä aamuvuorossa on eniten henkilöstöä ja
+										yövuorossa vähiten.
+									</li>
+									<li>
+										<strong>Potilaiden kiireellisyys</strong> vaikuttaa
+										hoitoaikaan ja osastolle siirtymisen todennäköisyyteen.
+										Vakavammat tapaukset vaativat enemmän resursseja ja
+										siirtyvät todennäköisemmin osastolle.
+									</li>
+									<li>
+										<strong>Viivästynyt vaikutus</strong>: Päivystyksen
+										kuormituksen kasvu näkyy viiveellä osastojen kuormituksessa,
+										koska potilaat siirtyvät päivystyksestä osastolle.
+									</li>
+								</ol>
+							</div>
+
+							<h3>Parametrien asettaminen</h3>
+							<ol>
+								<li>
+									Aseta <strong>saapumistiheydet</strong> eri vuorokaudenaikoina
+									(potilaita/tunti)
+								</li>
+								<li>
+									Määritä <strong>henkilöstöresurssit</strong> eri työvuoroissa
+									(lääkärit ja hoitajat)
+								</li>
+								<li>
+									Aseta käytettävissä olevat
+									<strong>vuodepaikat</strong> (päivystys ja osastot)
+								</li>
+								<li>Valitse simulaation <strong>kesto</strong> päivinä</li>
+								<li>
+									Voit valita myös valmiin
+									<strong>skenaarion</strong> pudotusvalikosta
+								</li>
+							</ol>
+
+							<h3>Simulaation suorittaminen</h3>
+							<p>
+								Paina "Suorita simulaatio" -painiketta parametrien asettamisen
+								jälkeen. Simulaation kestosta riippuen laskenta voi viedä
+								hetken.
+							</p>
+
+							<h3>Tulosten tulkinta</h3>
+							<ul>
+								<li>
+									<strong>Keskimääräinen odotusaika</strong>: Aika saapumisesta
+									lääkärin vastaanotolle
+								</li>
+								<li>
+									<strong>Keskimääräinen hoitoaika</strong>: Osastolle
+									siirtyneiden potilaiden keskimääräinen hoitoaika
+								</li>
+								<li>
+									<strong>Käyttöasteet</strong>: Kuinka suuri osa vuodepaikoista
+									on keskimäärin käytössä
+								</li>
+								<li>
+									<strong>Kuvaajat</strong>: Visualisoivat vuodepaikkojen
+									käyttöä ja odotusaikoja simulaation aikana
+								</li>
+							</ul>
+
+							<h3>Simulaatioiden vertailu</h3>
+							<p>
+								Voit tallentaa useita simulaatioita vertailuun "Tallenna
+								vertailuun" -painikkeella ja vertailla niiden tuloksia
+								Vertailu-välilehdellä. Näin voit arvioida eri resursointimallien
+								vaikutuksia ja etsiä optimaalista yhdistelmää.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Queue Simulator -->
+				<div class="main-tab-content" id="queue-simulator">
+					<div class="queue-simulator-container">
+						<div class="card queue-simulator-card">
+							<h2>Leikkausjonon simulaattori</h2>
+							<p class="simulator-description">
+								Optimoi leikkausjonon hallintaa ja resurssien käyttöä. Tämä
+								simulaattori auttaa arvioimaan erilaisten interventioiden
+								vaikutusta jonojen pituuteen ja odotusaikoihin.
+							</p>
+							<div class="form-group">
+								<label for="queue-arrivals">Uudet potilaat per viikko:</label>
+								<input type="number" id="queue-arrivals" value="15" min="1" />
+							</div>
+							<div class="form-group">
+								<label for="queue-slots">Leikkauspaikat per viikko:</label>
+								<input type="number" id="queue-slots" value="12" min="1" />
+							</div>
+							<div class="form-group">
+								<label for="queue-initial">Jonon pituus alussa:</label>
+								<input type="number" id="queue-initial" value="150" min="0" />
+							</div>
+
+							<div class="form-group">
+								<label>Intervention tyyppi:</label>
+								<div class="radio-group">
+									<label>
+										<input
+											type="radio"
+											name="intervention-type"
+											value="add"
+											checked
+										/>
+										Lisää paikkoja
+									</label>
+									<label>
+										<input
+											type="radio"
+											name="intervention-type"
+											value="change"
+										/>
+										Aseta paikkojen määrä
+									</label>
+								</div>
+							</div>
+
+							<div class="form-group" id="added-slots-group">
+								<label for="queue-added-slots"
+									>Lisättävät leikkauspaikat:</label
+								>
+								<input type="number" id="queue-added-slots" value="2" min="1" />
+								<div class="text-hint">
+									Intervention jälkeen: <span id="total-slots">14</span> paikkaa
+								</div>
+							</div>
+
+							<div
+								class="form-group"
+								id="intervention-slots-group"
+								style="display: none"
+							>
+								<label for="queue-intervention-slots"
+									>Leikkauspaikat intervention jälkeen:</label
+								>
+								<input
+									type="number"
+									id="queue-intervention-slots"
+									value="14"
+									min="1"
+								/>
+								<div class="text-hint">
+									Muutos: <span id="slots-change">+2</span> paikkaa
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="queue-duration"
+									>Simulaation kesto (viikkoja):</label
+								>
+								<input
+									type="number"
+									id="queue-duration"
+									value="26"
+									min="4"
+									max="104"
+								/>
+								<div class="text-hint">
+									(<span id="duration-months">6</span> kuukautta)
+								</div>
+							</div>
+
+							<button id="run-queue-simulation" class="secondary">
+								Suorita simulaatio
+							</button>
+						</div>
+
+						<div class="card">
+							<h2>Simulaation tulokset</h2>
+							<div id="queue-results-content" style="display: none">
+								<div class="queue-simulator-results">
+									<div class="queue-simulator-result-card">
+										<h3>Perustilanne</h3>
+										<div
+											class="queue-simulator-result-value"
+											id="baseline-wait"
+										>
+											--
+										</div>
+										<div>päivää odotusaika</div>
+										<div
+											class="queue-simulator-result-value"
+											id="baseline-queue"
+										>
+											--
+										</div>
+										<div>potilasta jonossa</div>
+										<div
+											class="queue-simulator-result-value"
+											id="baseline-surgeries"
+										>
+											--
+										</div>
+										<div>leikkausta tehty</div>
+									</div>
+
+									<div class="queue-simulator-result-card">
+										<h3>Intervention jälkeen</h3>
+										<div
+											class="queue-simulator-result-value"
+											id="intervention-wait"
+										>
+											--
+										</div>
+										<div>päivää odotusaika</div>
+										<div
+											class="queue-simulator-result-value"
+											id="intervention-queue"
+										>
+											--
+										</div>
+										<div>potilasta jonossa</div>
+										<div
+											class="queue-simulator-result-value"
+											id="intervention-surgeries"
+										>
+											--
+										</div>
+										<div>leikkausta tehty</div>
+									</div>
+								</div>
+
+								<div class="queue-simulator-chart-tabs">
+									<div
+										class="queue-simulator-chart-tab active"
+										data-chart="queue"
+									>
+										Jonon kehitys
+									</div>
+									<div class="queue-simulator-chart-tab" data-chart="surgeries">
+										Leikkaukset
+									</div>
+									<div
+										class="queue-simulator-chart-tab"
+										data-chart="cumulative"
+									>
+										Kumulatiivinen
+									</div>
+								</div>
+
+								<div class="chart-container">
+									<canvas id="queue-chart"></canvas>
+								</div>
+							</div>
+							<div
+								id="queue-no-results"
+								style="text-align: center; padding: 40px"
+							>
+								<p>Suorita simulaatio nähdäksesi tulokset.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+
+			<footer>
+				<div class="footer-content">
+					<div class="footer-section">
+						<h3>Terveydenhuollon simulaattori</h3>
+						<p>
+							Työkalu terveydenhuollon resurssien optimointiin ja
+							potilasvirtojen mallintamiseen
+						</p>
+					</div>
+					<div class="footer-section">
+						<h3>Ominaisuudet</h3>
+						<ul>
+							<li>Päivystyksen potilasvirran simulointi</li>
+							<li>Leikkausjonojen optimointi</li>
+							<li>Resurssien käytön visualisointi</li>
+							<li>Skenaarioiden vertailu</li>
+						</ul>
+					</div>
+					<div class="footer-section">
+						<h3>Hyödyt</h3>
+						<ul>
+							<li>Lyhyemmät odotusajat</li>
+							<li>Tehokkaampi resurssien käyttö</li>
+							<li>Parempi potilaskokemus</li>
+							<li>Kustannustehokkuus</li>
+						</ul>
+					</div>
+				</div>
+				<div class="copyright">
+					&copy; 2023 Terveydenhuollon simulaattori |
+					<a href="#" title="Tietosuojaseloste">Tietosuojaseloste</a> |
+					<a href="#" title="Käyttöehdot">Käyttöehdot</a>
+				</div>
+			</footer>
+		</div>
+	</body>
+	<script src="er-flow-simulator.js"></script>
+	<script src="queue-simulator.js"></script>
+	<script src="main.js"></script>
+</html>
