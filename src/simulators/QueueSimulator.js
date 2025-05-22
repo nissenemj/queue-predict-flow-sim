@@ -70,16 +70,16 @@ class QueueSimulator extends SimulationEngine {
     // Schedule weekly updates
     for (let week = 1; week < weeks; week++) {
       // Schedule weekly update event
-      this.scheduleEvent(week * 7 * 24 * 60, { week }, 'weekly_update');
+      this.scheduleEvent(week * 7 * 24 * 60, { week: week }, 'weekly_update');
 
       // Schedule intervention start event
       if (week === this.interventionWeek) {
-        this.scheduleEvent(week * 7 * 24 * 60, { week }, 'intervention_start');
+        this.scheduleEvent(week * 7 * 24 * 60, { week: week }, 'intervention_start');
       }
     }
 
     // Schedule simulation end event
-    this.scheduleEvent(weeks * 7 * 24 * 60, { weeks }, 'simulation_end');
+    this.scheduleEvent(weeks * 7 * 24 * 60, { weeks: weeks }, 'simulation_end');
 
     // Run the simulation
     super.run(weeks * 7 * 24 * 60);
@@ -95,8 +95,25 @@ class QueueSimulator extends SimulationEngine {
    * @param {Object} event - The event object
    */
   processWeeklyUpdate(event) {
-    const { time, data } = event;
-    const { week } = data;
+    const { time, entity, data } = event;
+
+    // Try to get week from entity or data
+    let week;
+    if (entity && entity.week !== undefined) {
+      week = entity.week;
+    } else if (data && data.week !== undefined) {
+      week = data.week;
+    }
+
+    if (week === undefined) {
+      this.logger.error('queue', 'Week parameter is undefined in weekly update event', null, {
+        event,
+        entity,
+        data
+      }, time);
+      return;
+    }
+
     const config = this.config;
 
     // Generate arrivals for this week (using Poisson distribution)
@@ -218,8 +235,24 @@ class QueueSimulator extends SimulationEngine {
    * @param {Object} event - The event object
    */
   processInterventionStart(event) {
-    const { time, data } = event;
-    const { week } = data;
+    const { time, entity, data } = event;
+
+    // Try to get week from entity or data
+    let week;
+    if (entity && entity.week !== undefined) {
+      week = entity.week;
+    } else if (data && data.week !== undefined) {
+      week = data.week;
+    }
+
+    if (week === undefined) {
+      this.logger.error('queue', 'Week parameter is undefined in intervention start event', null, {
+        event,
+        entity,
+        data
+      }, time);
+      return;
+    }
 
     this.logger.info('queue', `Intervention started at week ${week}`, null, {
       week,
@@ -234,8 +267,27 @@ class QueueSimulator extends SimulationEngine {
    * @param {Object} event - The event object
    */
   processSimulationEnd(event) {
-    const { time, data } = event;
-    const { weeks } = data;
+    const { time, entity, data } = event;
+
+    // Try to get weeks from entity or data
+    let weeks;
+    if (entity && entity.weeks !== undefined) {
+      weeks = entity.weeks;
+    } else if (data && data.weeks !== undefined) {
+      weeks = data.weeks;
+    } else {
+      // Fallback to config if available
+      weeks = this.config.simulationDurationWeeks;
+    }
+
+    if (weeks === undefined) {
+      this.logger.error('queue', 'Weeks parameter is undefined in simulation end event', null, {
+        event,
+        entity,
+        data
+      }, time);
+      return;
+    }
 
     // Add the last week's surgeries
     const lastBaselineSurgeries = Math.min(this.baselineQueue[weeks - 1], this.config.slotsPerWeek);
