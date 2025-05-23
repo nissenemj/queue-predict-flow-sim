@@ -199,9 +199,10 @@ class SimulationEngine {
    * @param {Object} entity - The entity associated with the event
    * @param {string} eventType - The type of event
    * @param {Object} data - Additional data for the event
+   * @param {number} priority - Optional priority value (higher value = higher priority)
    * @returns {Object} - The scheduled event
    */
-  scheduleEvent(time, entity, eventType, data = {}) {
+  scheduleEvent(time, entity, eventType, data = {}, priority = 0) {
     // Ensure time is not before current time
     if (time < this.currentTime) {
       this.logger.warn('simulation', `Attempted to schedule event in the past: ${eventType}`, entity, {
@@ -212,6 +213,23 @@ class SimulationEngine {
       time = this.currentTime;
     }
 
+    // Calculate effective priority
+    let effectivePriority = priority;
+
+    // Adjust priority based on entity attributes if available
+    if (entity && entity.priorityScore) {
+      effectivePriority += entity.priorityScore;
+    }
+
+    // Adjust priority based on event type
+    if (eventType.includes('emergency')) {
+      effectivePriority += 50; // Emergency events get high priority
+    } else if (eventType.includes('urgent')) {
+      effectivePriority += 30; // Urgent events get medium priority
+    } else if (eventType.includes('transfer')) {
+      effectivePriority += 20; // Transfer events get some priority
+    }
+
     // Create event object
     const event = {
       id: `${eventType}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -220,17 +238,22 @@ class SimulationEngine {
       entityId: entity ? entity.id : null,
       eventType,
       data,
+      priority: effectivePriority,
       processed: false,
       createdAt: this.currentTime
     };
 
-    // Add to event queue with time as priority
-    this.eventQueue.enqueue(event, time);
+    // Add to event queue with composite priority (time and priority)
+    // Events at the same time will be processed in order of priority
+    const compositePriority = time - (effectivePriority / 1000); // Subtract a fraction based on priority
+    this.eventQueue.enqueue(event, compositePriority);
 
     // Log event scheduling
     if (this.debug) {
       this.logger.debug('simulation', `Scheduled event: ${eventType}`, entity, {
         scheduledTime: time,
+        priority: effectivePriority,
+        compositePriority,
         data
       }, this.currentTime);
     }
