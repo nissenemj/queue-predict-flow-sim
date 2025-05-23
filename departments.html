@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Department Simulation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .header {
+      background-color: #4285F4;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .button {
+      background-color: white;
+      color: #4285F4;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .button:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .button.primary {
+      background-color: #34A853;
+      color: white;
+    }
+    
+    .button.primary:hover {
+      background-color: #2E9549;
+    }
+    
+    .button.danger {
+      background-color: #EA4335;
+      color: white;
+    }
+    
+    .button.danger:hover {
+      background-color: #D33C2F;
+    }
+    
+    .content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-section h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input[type="number"],
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .checkbox-group label {
+      margin-left: 5px;
+      margin-bottom: 0;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .departments-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    
+    .department-card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      width: calc(50% - 20px);
+      min-width: 300px;
+    }
+    
+    .department-card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 18px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+    }
+    
+    .department-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .stat-value {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .timeline-container {
+      height: 120px;
+      padding: 10px 20px;
+      border-top: 1px solid #ddd;
+    }
+    
+    .events-container {
+      height: 200px;
+      padding: 10px 20px;
+      border-top: 1px solid #ddd;
+      overflow-y: auto;
+    }
+    
+    .event-item {
+      padding: 5px 10px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .event-item.admission {
+      background-color: #E3F2FD;
+    }
+    
+    .event-item.discharge {
+      background-color: #E8F5E9;
+    }
+    
+    .event-item.transfer {
+      background-color: #FFF9C4;
+    }
+    
+    .event-item.error {
+      background-color: #FFEBEE;
+    }
+    
+    .footer {
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    /* Dark mode styles */
+    body.dark-mode {
+      background-color: #222;
+      color: #fff;
+    }
+    
+    body.dark-mode .header {
+      background-color: #333;
+    }
+    
+    body.dark-mode .sidebar {
+      background-color: #333;
+      border-right-color: #444;
+    }
+    
+    body.dark-mode .sidebar h2 {
+      border-bottom-color: #444;
+    }
+    
+    body.dark-mode .form-group input[type="number"],
+    body.dark-mode .form-group select {
+      background-color: #444;
+      border-color: #555;
+      color: #fff;
+    }
+    
+    body.dark-mode .department-card {
+      background-color: #333;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    body.dark-mode .department-card h3 {
+      border-bottom-color: #444;
+    }
+    
+    body.dark-mode .stat-label {
+      color: #aaa;
+    }
+    
+    body.dark-mode .timeline-container,
+    body.dark-mode .events-container {
+      border-top-color: #444;
+    }
+    
+    body.dark-mode .event-item.admission {
+      background-color: #0D47A1;
+      color: #fff;
+    }
+    
+    body.dark-mode .event-item.discharge {
+      background-color: #1B5E20;
+      color: #fff;
+    }
+    
+    body.dark-mode .event-item.transfer {
+      background-color: #F57F17;
+      color: #fff;
+    }
+    
+    body.dark-mode .event-item.error {
+      background-color: #B71C1C;
+      color: #fff;
+    }
+    
+    body.dark-mode .footer {
+      background-color: #333;
+      border-top-color: #444;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hospital Department Simulation</h1>
+      <div class="controls">
+        <button id="toggle-dark-mode" class="button">Toggle Dark Mode</button>
+        <button id="start-simulation" class="button primary">Start Simulation</button>
+        <button id="pause-simulation" class="button">Pause</button>
+        <button id="stop-simulation" class="button danger">Stop Simulation</button>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="sidebar">
+        <h2>Simulation Settings</h2>
+        
+        <div class="sidebar-section">
+          <h3>Patient Flow</h3>
+          <div class="form-group">
+            <label for="arrival-rate-morning">Morning Arrival Rate (patients/hour)</label>
+            <input type="number" id="arrival-rate-morning" min="1" max="50" value="8">
+          </div>
+          
+          <div class="form-group">
+            <label for="arrival-rate-afternoon">Afternoon Arrival Rate (patients/hour)</label>
+            <input type="number" id="arrival-rate-afternoon" min="1" max="50" value="10">
+          </div>
+          
+          <div class="form-group">
+            <label for="arrival-rate-evening">Evening Arrival Rate (patients/hour)</label>
+            <input type="number" id="arrival-rate-evening" min="1" max="50" value="6">
+          </div>
+          
+          <div class="form-group">
+            <label for="arrival-rate-night">Night Arrival Rate (patients/hour)</label>
+            <input type="number" id="arrival-rate-night" min="1" max="50" value="3">
+          </div>
+          
+          <div class="form-group">
+            <label for="acuity-distribution">Acuity Distribution</label>
+            <select id="acuity-distribution">
+              <option value="normal">Normal</option>
+              <option value="high-acuity">High Acuity</option>
+              <option value="low-acuity">Low Acuity</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>Department Settings</h3>
+          <div class="form-group">
+            <label for="ed-beds">ED Beds</label>
+            <input type="number" id="ed-beds" min="10" max="100" value="50">
+          </div>
+          
+          <div class="form-group">
+            <label for="icu-beds">ICU Beds</label>
+            <input type="number" id="icu-beds" min="5" max="50" value="20">
+          </div>
+          
+          <div class="form-group">
+            <label for="medical-ward-beds">Medical Ward Beds</label>
+            <input type="number" id="medical-ward-beds" min="20" max="200" value="100">
+          </div>
+          
+          <div class="form-group">
+            <label for="surgical-ward-beds">Surgical Ward Beds</label>
+            <input type="number" id="surgical-ward-beds" min="20" max="200" value="80">
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>Simulation Options</h3>
+          <div class="form-group">
+            <label for="simulation-speed">Simulation Speed</label>
+            <select id="simulation-speed">
+              <option value="1">1x</option>
+              <option value="2">2x</option>
+              <option value="5">5x</option>
+              <option value="10" selected>10x</option>
+              <option value="50">50x</option>
+              <option value="100">100x</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="simulation-duration">Duration (days)</label>
+            <input type="number" id="simulation-duration" min="1" max="30" value="7">
+          </div>
+        </div>
+      </div>
+      
+      <div class="main-content">
+        <div id="departments-container" class="departments-container">
+          <!-- Department cards will be rendered here -->
+        </div>
+        
+        <div id="events-container" class="events-container">
+          <!-- Events will be rendered here -->
+        </div>
+        
+        <div id="timeline-container" class="timeline-container">
+          <!-- Timeline will be rendered here -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Hospital Department Simulation | &copy; 2023
+    </div>
+  </div>
+  
+  <script type="module">
+    import HospitalDepartmentSimulator from './src/simulators/HospitalDepartmentSimulator.js';
+    import TimelineControl from './src/ui/TimelineControl.js';
+    
+    // DOM elements
+    const departmentsContainer = document.getElementById('departments-container');
+    const eventsContainer = document.getElementById('events-container');
+    const timelineContainer = document.getElementById('timeline-container');
+    const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+    const startSimulationButton = document.getElementById('start-simulation');
+    const pauseSimulationButton = document.getElementById('pause-simulation');
+    const stopSimulationButton = document.getElementById('stop-simulation');
+    
+    // Form elements
+    const arrivalRateMorningInput = document.getElementById('arrival-rate-morning');
+    const arrivalRateAfternoonInput = document.getElementById('arrival-rate-afternoon');
+    const arrivalRateEveningInput = document.getElementById('arrival-rate-evening');
+    const arrivalRateNightInput = document.getElementById('arrival-rate-night');
+    const acuityDistributionSelect = document.getElementById('acuity-distribution');
+    const edBedsInput = document.getElementById('ed-beds');
+    const icuBedsInput = document.getElementById('icu-beds');
+    const medicalWardBedsInput = document.getElementById('medical-ward-beds');
+    const surgicalWardBedsInput = document.getElementById('surgical-ward-beds');
+    const simulationSpeedSelect = document.getElementById('simulation-speed');
+    const simulationDurationInput = document.getElementById('simulation-duration');
+    
+    // Simulator and timeline
+    let simulator = null;
+    let timelineControl = null;
+    let simulationRunning = false;
+    let simulationInterval = null;
+    
+    // Initialize
+    function initialize() {
+      // Create simulator
+      createSimulator();
+      
+      // Create timeline control
+      createTimelineControl();
+      
+      // Add event listeners
+      addEventListeners();
+      
+      // Render department cards
+      renderDepartmentCards();
+    }
+    
+    // Create simulator
+    function createSimulator() {
+      // Get configuration from form
+      const config = getSimulationConfig();
+      
+      // Create simulator
+      simulator = new HospitalDepartmentSimulator(config, {
+        debug: true,
+        speedFactor: parseInt(simulationSpeedSelect.value)
+      });
+      
+      // Register event handlers
+      simulator.on('patientArrival', handlePatientArrival);
+      simulator.on('patientAdmitted', handlePatientAdmitted);
+      simulator.on('patientDischarged', handlePatientDischarged);
+      simulator.on('patientTransferred', handlePatientTransferred);
+      simulator.on('transferFailed', handleTransferFailed);
+      simulator.on('simulationStep', handleSimulationStep);
+    }
+    
+    // Create timeline control
+    function createTimelineControl() {
+      if (timelineControl) {
+        timelineControl.destroy();
+      }
+      
+      timelineControl = new TimelineControl(simulator, timelineContainer, {
+        darkMode: document.body.classList.contains('dark-mode'),
+        defaultSpeed: parseInt(simulationSpeedSelect.value)
+      });
+    }
+    
+    // Add event listeners
+    function addEventListeners() {
+      // Toggle dark mode
+      toggleDarkModeButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        if (timelineControl) {
+          timelineControl.setDarkMode(document.body.classList.contains('dark-mode'));
+        }
+      });
+      
+      // Start simulation
+      startSimulationButton.addEventListener('click', startSimulation);
+      
+      // Pause simulation
+      pauseSimulationButton.addEventListener('click', pauseSimulation);
+      
+      // Stop simulation
+      stopSimulationButton.addEventListener('click', stopSimulation);
+    }
+    
+    // Get simulation configuration from form
+    function getSimulationConfig() {
+      return {
+        arrival_rates: {
+          morning: parseInt(arrivalRateMorningInput.value),
+          afternoon: parseInt(arrivalRateAfternoonInput.value),
+          evening: parseInt(arrivalRateEveningInput.value),
+          night: parseInt(arrivalRateNightInput.value)
+        },
+        acuity_distribution: acuityDistributionSelect.value,
+        duration_days: parseInt(simulationDurationInput.value),
+        departments: {
+          ed: {
+            beds: parseInt(edBedsInput.value)
+          },
+          icu: {
+            beds: parseInt(icuBedsInput.value)
+          },
+          medical_ward: {
+            beds: parseInt(medicalWardBedsInput.value)
+          },
+          surgical_ward: {
+            beds: parseInt(surgicalWardBedsInput.value)
+          }
+        }
+      };
+    }
+    
+    // Render department cards
+    function renderDepartmentCards() {
+      if (!simulator) return;
+      
+      // Clear container
+      departmentsContainer.innerHTML = '';
+      
+      // Get departments
+      const departments = simulator.getAllDepartments();
+      
+      // Render card for each department
+      for (const department of departments) {
+        const stats = department.getStatistics();
+        
+        const card = document.createElement('div');
+        card.className = 'department-card';
+        card.id = `department-${department.id}`;
+        
+        const title = document.createElement('h3');
+        title.textContent = department.name;
+        
+        const statsContainer = document.createElement('div');
+        statsContainer.className = 'department-stats';
+        
+        // Add stats
+        addStatItem(statsContainer, 'Current Patients', stats.currentPatients);
+        addStatItem(statsContainer, 'Waiting Patients', stats.waitingPatients);
+        addStatItem(statsContainer, 'Total Beds', stats.totalBeds);
+        addStatItem(statsContainer, 'Available Beds', stats.availableBeds);
+        addStatItem(statsContainer, 'Bed Utilization', `${(stats.bedUtilization * 100).toFixed(1)}%`);
+        addStatItem(statsContainer, 'Avg Wait Time', `${stats.avgWaitTime.toFixed(1)} min`);
+        addStatItem(statsContainer, 'Avg Length of Stay', `${stats.avgLOS.toFixed(1)} min`);
+        addStatItem(statsContainer, 'Treated Patients', stats.treatedPatients);
+        
+        card.appendChild(title);
+        card.appendChild(statsContainer);
+        
+        departmentsContainer.appendChild(card);
+      }
+    }
+    
+    // Add stat item to container
+    function addStatItem(container, label, value) {
+      const item = document.createElement('div');
+      item.className = 'stat-item';
+      
+      const labelElement = document.createElement('span');
+      labelElement.className = 'stat-label';
+      labelElement.textContent = label;
+      
+      const valueElement = document.createElement('span');
+      valueElement.className = 'stat-value';
+      valueElement.textContent = value;
+      
+      item.appendChild(labelElement);
+      item.appendChild(valueElement);
+      
+      container.appendChild(item);
+    }
+    
+    // Add event to events container
+    function addEvent(type, message) {
+      const event = document.createElement('div');
+      event.className = `event-item ${type}`;
+      event.textContent = message;
+      
+      eventsContainer.insertBefore(event, eventsContainer.firstChild);
+      
+      // Limit number of events
+      if (eventsContainer.children.length > 100) {
+        eventsContainer.removeChild(eventsContainer.lastChild);
+      }
+    }
+    
+    // Handle patient arrival event
+    function handlePatientArrival(event) {
+      const { patient, time } = event;
+      
+      addEvent('admission', `Patient ${patient.id} arrived (Acuity: ${patient.acuityLevel}, Age: ${patient.age})`);
+    }
+    
+    // Handle patient admitted event
+    function handlePatientAdmitted(event) {
+      const { patient, department, time } = event;
+      
+      addEvent('admission', `Patient ${patient.id} admitted to ${department.name}`);
+      
+      // Update department card
+      renderDepartmentCards();
+    }
+    
+    // Handle patient discharged event
+    function handlePatientDischarged(event) {
+      const { patient, department, time } = event;
+      
+      addEvent('discharge', `Patient ${patient.id} discharged from ${department.name}`);
+      
+      // Update department card
+      renderDepartmentCards();
+    }
+    
+    // Handle patient transferred event
+    function handlePatientTransferred(event) {
+      const { patient, fromDepartment, toDepartment, time } = event;
+      
+      addEvent('transfer', `Patient ${patient.id} transferred from ${fromDepartment.name} to ${toDepartment.name}`);
+      
+      // Update department cards
+      renderDepartmentCards();
+    }
+    
+    // Handle transfer failed event
+    function handleTransferFailed(event) {
+      const { patient, fromDepartment, toDepartment, reason, time } = event;
+      
+      addEvent('error', `Transfer failed for patient ${patient.id} from ${fromDepartment.name} to ${toDepartment ? toDepartment.name : 'unknown'}: ${reason}`);
+    }
+    
+    // Handle simulation step event
+    function handleSimulationStep(event) {
+      const { time, step } = event;
+      
+      // Update department cards every minute of simulation time
+      if (step % 60 === 0) {
+        renderDepartmentCards();
+      }
+    }
+    
+    // Start simulation
+    function startSimulation() {
+      if (simulationRunning) return;
+      
+      // Reset simulator
+      createSimulator();
+      
+      // Update timeline control
+      createTimelineControl();
+      
+      // Clear events
+      eventsContainer.innerHTML = '';
+      
+      // Start simulation
+      simulator.start();
+      simulationRunning = true;
+      
+      // Run simulation steps
+      const speed = parseInt(simulationSpeedSelect.value);
+      simulationInterval = setInterval(() => {
+        simulator.step(1);
+      }, 100 / speed);
+    }
+    
+    // Pause simulation
+    function pauseSimulation() {
+      if (!simulationRunning) return;
+      
+      if (simulator.isPaused) {
+        // Resume
+        simulator.resume();
+        simulationInterval = setInterval(() => {
+          simulator.step(1);
+        }, 100 / parseInt(simulationSpeedSelect.value));
+      } else {
+        // Pause
+        simulator.pause();
+        clearInterval(simulationInterval);
+        simulationInterval = null;
+      }
+    }
+    
+    // Stop simulation
+    function stopSimulation() {
+      if (!simulationRunning) return;
+      
+      // Stop simulation
+      simulator.stop();
+      simulationRunning = false;
+      
+      // Clear interval
+      clearInterval(simulationInterval);
+      simulationInterval = null;
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initialize);
+  </script>
+</body>
+</html>
