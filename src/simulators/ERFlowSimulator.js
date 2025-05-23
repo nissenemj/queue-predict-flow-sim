@@ -1,4 +1,4 @@
-import SimulationEngine from './SimulationEngine.js';
+import SimulationEngineCompat from './SimulationEngineCompat.js';
 import Patient from '../models/Patient.js';
 import { Staff, Bed } from '../models/Resource.js';
 
@@ -6,7 +6,7 @@ import { Staff, Bed } from '../models/Resource.js';
  * ER Flow Simulator class
  * Simulates patient flow through an emergency department and hospital wards
  */
-class ERFlowSimulator extends SimulationEngine {
+class ERFlowSimulator extends SimulationEngineCompat {
   /**
    * Constructor for the ER Flow Simulator
    * @param {Object} options - Simulation options

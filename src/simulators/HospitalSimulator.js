@@ -4,7 +4,7 @@
  * and priority-based resource allocation
  */
 
-import SimulationEngine from './SimulationEngine.js';
+import SimulationEngineCompat from './SimulationEngineCompat.js';
 import Patient from '../models/Patient.js';
 import HospitalResourceManager from '../utils/HospitalResourceManager.js';
 import { EmergencyArrival, PatientTransfer, PatientDischarge } from '../models/HealthcareEvents.js';
@@ -12,9 +12,9 @@ import PredictionService from '../ml/PredictionService.js';
 
 /**
  * HospitalSimulator class
- * Extends SimulationEngine with healthcare-specific functionality
+ * Extends SimulationEngineCompat with healthcare-specific functionality
  */
-class HospitalSimulator extends SimulationEngine {
+class HospitalSimulator extends SimulationEngineCompat {
   /**
    * Constructor for HospitalSimulator
    * @param {Object} config - Configuration for the simulation
@@ -246,6 +246,24 @@ class HospitalSimulator extends SimulationEngine {
     // Schedule statistics collection
     for (let time = 60; time < duration; time += 60) {
       this.scheduleEvent(time, null, 'collect_statistics');
+    }
+  }
+
+  /**
+   * Schedule an event with priority
+   * This method uses the scheduleEventWithPriority method from SimulationEngineCompat
+   * @param {number} time - The time at which the event should occur
+   * @param {Object} entity - The entity associated with the event
+   * @param {string} eventType - The type of event
+   * @param {Object} data - Additional data for the event
+   * @param {number} priority - Priority value (higher value = higher priority)
+   * @returns {Object} - The scheduled event
+   */
+  scheduleEvent(time, entity, eventType, data = {}, priority = 0) {
+    if (priority > 0) {
+      return this.scheduleEventWithPriority(time, entity, eventType, data, priority);
+    } else {
+      return super.scheduleEvent(time, entity, eventType, data);
     }
   }
 
