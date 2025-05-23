@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Hospital Simulator Debug</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 0;
+				padding: 20px;
+				background-color: #f5f5f5;
+			}
+
+			.container {
+				max-width: 800px;
+				margin: 0 auto;
+				background-color: white;
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+
+			h1 {
+				color: #333;
+				margin-top: 0;
+			}
+
+			.test-section {
+				margin-bottom: 20px;
+				padding: 15px;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+			}
+
+			.test-section h2 {
+				margin-top: 0;
+				color: #2a6ebb;
+			}
+
+			.test-button {
+				background-color: #4caf50;
+				color: white;
+				border: none;
+				padding: 10px 15px;
+				border-radius: 4px;
+				cursor: pointer;
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+
+			.test-button:hover {
+				background-color: #45a049;
+			}
+
+			.test-result {
+				margin-top: 10px;
+				padding: 10px;
+				border-radius: 4px;
+				display: none;
+			}
+
+			.success {
+				background-color: #dff0d8;
+				color: #3c763d;
+			}
+
+			.failure {
+				background-color: #f2dede;
+				color: #a94442;
+			}
+
+			.console {
+				background-color: #333;
+				color: #fff;
+				padding: 15px;
+				border-radius: 4px;
+				font-family: monospace;
+				margin-top: 20px;
+				max-height: 300px;
+				overflow-y: auto;
+			}
+
+			.console-entry {
+				margin-bottom: 5px;
+				word-wrap: break-word;
+			}
+
+			.console-entry.error {
+				color: #f44336;
+			}
+
+			.console-entry.warn {
+				color: #ff9800;
+			}
+
+			.console-entry.info {
+				color: #2196f3;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<h1>Hospital Simulator Debug</h1>
+
+			<div class="test-section">
+				<h2>SimulationEngineCompat</h2>
+				<button id="test-simulation-engine" class="test-button">
+					Test SimulationEngineCompat
+				</button>
+				<div id="simulation-engine-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>ERFlowSimulator</h2>
+				<button id="test-er-flow" class="test-button">
+					Test ERFlowSimulator
+				</button>
+				<div id="er-flow-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>HospitalSimulator</h2>
+				<button id="test-hospital" class="test-button">
+					Test HospitalSimulator
+				</button>
+				<div id="hospital-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>Patient</h2>
+				<button id="test-patient" class="test-button">Test Patient</button>
+				<div id="patient-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>HealthcareEvents</h2>
+				<button id="test-events" class="test-button">
+					Test HealthcareEvents
+				</button>
+				<div id="events-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>Web Interface</h2>
+				<button id="test-web-interface" class="test-button">
+					Test Web Interface
+				</button>
+				<div id="web-interface-result" class="test-result"></div>
+			</div>
+
+			<div class="test-section">
+				<h2>All Tests</h2>
+				<button id="test-all" class="test-button">Run All Tests</button>
+				<div id="all-result" class="test-result"></div>
+			</div>
+
+			<div class="console" id="console">
+				<div class="console-entry">Console output will appear here...</div>
+			</div>
+		</div>
+
+		<script type="module">
+			import {
+				testSimulationEngineCompat,
+				testERFlowSimulator,
+				testHospitalSimulator,
+				testPatient,
+				testHealthcareEvents,
+				testWebInterface,
+				runAllTests,
+			} from "./debug.js";
+
+			// Override console methods to display in our custom console
+			const originalConsole = {
+				log: console.log,
+				error: console.error,
+				warn: console.warn,
+				info: console.info,
+			};
+
+			const consoleElement = document.getElementById("console");
+
+			function addConsoleEntry(message, type = "log") {
+				const entry = document.createElement("div");
+				entry.className = `console-entry ${type}`;
+
+				// Convert objects to strings
+				if (typeof message === "object") {
+					try {
+						message = JSON.stringify(message, null, 2);
+					} catch (e) {
+						message = message.toString();
+					}
+				}
+
+				entry.textContent = message;
+				consoleElement.appendChild(entry);
+				consoleElement.scrollTop = consoleElement.scrollHeight;
+			}
+
+			console.log = function (...args) {
+				originalConsole.log(...args);
+				args.forEach((arg) => addConsoleEntry(arg, "log"));
+			};
+
+			console.error = function (...args) {
+				originalConsole.error(...args);
+				args.forEach((arg) => addConsoleEntry(arg, "error"));
+			};
+
+			console.warn = function (...args) {
+				originalConsole.warn(...args);
+				args.forEach((arg) => addConsoleEntry(arg, "warn"));
+			};
+
+			console.info = function (...args) {
+				originalConsole.info(...args);
+				args.forEach((arg) => addConsoleEntry(arg, "info"));
+			};
+
+			// Set up event listeners for test buttons
+			document
+				.getElementById("test-simulation-engine")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById(
+						"simulation-engine-result"
+					);
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testSimulationEngineCompat();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test passed!"
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-er-flow")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("er-flow-result");
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testERFlowSimulator();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test passed!"
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-hospital")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("hospital-result");
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testHospitalSimulator();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test passed!"
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-patient")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("patient-result");
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testPatient();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test passed!"
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-events")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("events-result");
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testHealthcareEvents();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test passed!"
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-web-interface")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("web-interface-result");
+					resultElement.style.display = "block";
+
+					try {
+						const result = await testWebInterface();
+						resultElement.className = result
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = result
+							? "Test initialized! Check the UI container."
+							: "Test failed!";
+					} catch (error) {
+						console.error("Error running test:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Test failed with error: ${error.message}`;
+					}
+				});
+
+			document
+				.getElementById("test-all")
+				.addEventListener("click", async () => {
+					consoleElement.innerHTML = "";
+					const resultElement = document.getElementById("all-result");
+					resultElement.style.display = "block";
+
+					try {
+						const results = await runAllTests();
+						const allPassed = Object.values(results).every(
+							(result) => result === true
+						);
+						resultElement.className = allPassed
+							? "test-result success"
+							: "test-result failure";
+						resultElement.textContent = allPassed
+							? "All tests passed!"
+							: "Some tests failed!";
+					} catch (error) {
+						console.error("Error running tests:", error);
+						resultElement.className = "test-result failure";
+						resultElement.textContent = `Tests failed with error: ${error.message}`;
+					}
+				});
+		</script>
+	</body>
+</html>
