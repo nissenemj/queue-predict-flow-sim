@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Simulation Analytics Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    .header {
+      background-color: #4285F4;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .button {
+      background-color: white;
+      color: #4285F4;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .button:hover {
+      background-color: #f0f0f0;
+    }
+    
+    .button.primary {
+      background-color: #34A853;
+      color: white;
+    }
+    
+    .button.primary:hover {
+      background-color: #2E9549;
+    }
+    
+    .button.danger {
+      background-color: #EA4335;
+      color: white;
+    }
+    
+    .button.danger:hover {
+      background-color: #D33C2F;
+    }
+    
+    .content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    
+    .sidebar {
+      width: 250px;
+      background-color: white;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 18px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 20px;
+    }
+    
+    .sidebar-section h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input[type="number"],
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    
+    .checkbox-group label {
+      margin-left: 5px;
+      margin-bottom: 0;
+    }
+    
+    .dashboard-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .footer {
+      background-color: #f0f0f0;
+      padding: 10px 20px;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    /* Dark mode styles */
+    body.dark-mode {
+      background-color: #222;
+      color: #fff;
+    }
+    
+    body.dark-mode .header {
+      background-color: #333;
+    }
+    
+    body.dark-mode .sidebar {
+      background-color: #333;
+      border-right-color: #444;
+    }
+    
+    body.dark-mode .sidebar h2 {
+      border-bottom-color: #444;
+    }
+    
+    body.dark-mode .form-group input[type="number"],
+    body.dark-mode .form-group select {
+      background-color: #444;
+      border-color: #555;
+      color: #fff;
+    }
+    
+    body.dark-mode .footer {
+      background-color: #333;
+      border-top-color: #444;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hospital Simulation Analytics Dashboard</h1>
+      <div class="controls">
+        <button id="toggle-dark-mode" class="button">Toggle Dark Mode</button>
+        <button id="toggle-predictions" class="button">Toggle Predictions</button>
+        <button id="start-simulation" class="button primary">Start Simulation</button>
+        <button id="stop-simulation" class="button danger">Stop Simulation</button>
+      </div>
+    </div>
+    
+    <div class="content">
+      <div class="sidebar">
+        <h2>Simulation Settings</h2>
+        
+        <div class="sidebar-section">
+          <h3>Patient Flow</h3>
+          <div class="form-group">
+            <label for="arrival-rate">Arrival Rate (patients/hour)</label>
+            <input type="number" id="arrival-rate" min="1" max="50" value="8">
+          </div>
+          
+          <div class="form-group">
+            <label for="acuity-distribution">Acuity Distribution</label>
+            <select id="acuity-distribution">
+              <option value="normal">Normal</option>
+              <option value="high-acuity">High Acuity</option>
+              <option value="low-acuity">Low Acuity</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>Resources</h3>
+          <div class="form-group">
+            <label for="doctors">Doctors</label>
+            <input type="number" id="doctors" min="1" max="50" value="10">
+          </div>
+          
+          <div class="form-group">
+            <label for="nurses">Nurses</label>
+            <input type="number" id="nurses" min="1" max="100" value="20">
+          </div>
+          
+          <div class="form-group">
+            <label for="ed-beds">ED Beds</label>
+            <input type="number" id="ed-beds" min="1" max="100" value="30">
+          </div>
+          
+          <div class="form-group">
+            <label for="ward-beds">Ward Beds</label>
+            <input type="number" id="ward-beds" min="1" max="500" value="100">
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>Simulation Options</h3>
+          <div class="checkbox-group">
+            <input type="checkbox" id="enable-ml" checked>
+            <label for="enable-ml">Enable ML Predictions</label>
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="collect-training-data" checked>
+            <label for="collect-training-data">Collect Training Data</label>
+          </div>
+          
+          <div class="form-group">
+            <label for="simulation-speed">Simulation Speed</label>
+            <select id="simulation-speed">
+              <option value="1">1x</option>
+              <option value="2">2x</option>
+              <option value="5">5x</option>
+              <option value="10" selected>10x</option>
+              <option value="50">50x</option>
+              <option value="100">100x</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="simulation-duration">Duration (days)</label>
+            <input type="number" id="simulation-duration" min="1" max="30" value="7">
+          </div>
+        </div>
+      </div>
+      
+      <div id="dashboard-container" class="dashboard-container">
+        <!-- Dashboard will be rendered here -->
+      </div>
+    </div>
+    
+    <div class="footer">
+      Hospital Simulation Analytics Dashboard | &copy; 2023
+    </div>
+  </div>
+  
+  <script type="module">
+    import PredictiveHospitalSimulator from './src/simulators/PredictiveHospitalSimulator.js';
+    import DashboardIntegration from './src/ui/DashboardIntegration.js';
+    
+    // DOM elements
+    const dashboardContainer = document.getElementById('dashboard-container');
+    const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
+    const togglePredictionsButton = document.getElementById('toggle-predictions');
+    const startSimulationButton = document.getElementById('start-simulation');
+    const stopSimulationButton = document.getElementById('stop-simulation');
+    
+    // Form elements
+    const arrivalRateInput = document.getElementById('arrival-rate');
+    const acuityDistributionSelect = document.getElementById('acuity-distribution');
+    const doctorsInput = document.getElementById('doctors');
+    const nursesInput = document.getElementById('nurses');
+    const edBedsInput = document.getElementById('ed-beds');
+    const wardBedsInput = document.getElementById('ward-beds');
+    const enableMlCheckbox = document.getElementById('enable-ml');
+    const collectTrainingDataCheckbox = document.getElementById('collect-training-data');
+    const simulationSpeedSelect = document.getElementById('simulation-speed');
+    const simulationDurationInput = document.getElementById('simulation-duration');
+    
+    // Simulator and dashboard
+    let simulator = null;
+    let dashboardIntegration = null;
+    let simulationRunning = false;
+    let simulationInterval = null;
+    
+    // Initialize
+    function initialize() {
+      // Create simulator
+      createSimulator();
+      
+      // Create dashboard
+      createDashboard();
+      
+      // Add event listeners
+      addEventListeners();
+    }
+    
+    // Create simulator
+    function createSimulator() {
+      // Get configuration from form
+      const config = getSimulationConfig();
+      
+      // Create simulator
+      simulator = new PredictiveHospitalSimulator(config, {
+        mlEnabled: enableMlCheckbox.checked,
+        collectTrainingData: collectTrainingDataCheckbox.checked,
+        debug: true
+      });
+      
+      // Initialize simulator
+      simulator.initialize(config);
+    }
+    
+    // Create dashboard
+    function createDashboard() {
+      // Create dashboard integration
+      dashboardIntegration = new DashboardIntegration(simulator, dashboardContainer, {
+        darkMode: document.body.classList.contains('dark-mode'),
+        showPredictions: true,
+        refreshInterval: 1000
+      });
+      
+      // Initialize dashboard
+      dashboardIntegration.initialize();
+    }
+    
+    // Add event listeners
+    function addEventListeners() {
+      // Toggle dark mode
+      toggleDarkModeButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        
+        if (dashboardIntegration) {
+          dashboardIntegration.toggleDarkMode();
+        }
+      });
+      
+      // Toggle predictions
+      togglePredictionsButton.addEventListener('click', () => {
+        if (dashboardIntegration) {
+          dashboardIntegration.togglePredictions();
+        }
+      });
+      
+      // Start simulation
+      startSimulationButton.addEventListener('click', startSimulation);
+      
+      // Stop simulation
+      stopSimulationButton.addEventListener('click', stopSimulation);
+    }
+    
+    // Get simulation configuration from form
+    function getSimulationConfig() {
+      return {
+        arrival_rates: {
+          morning: parseInt(arrivalRateInput.value),
+          afternoon: parseInt(arrivalRateInput.value) * 0.9,
+          evening: parseInt(arrivalRateInput.value) * 0.7,
+          night: parseInt(arrivalRateInput.value) * 0.4
+        },
+        acuity_distribution: acuityDistributionSelect.value,
+        resources: {
+          doctors: parseInt(doctorsInput.value),
+          nurses: parseInt(nursesInput.value),
+          ed_beds: parseInt(edBedsInput.value),
+          ward_beds: parseInt(wardBedsInput.value)
+        },
+        staff: {
+          doctors: {
+            day: Math.ceil(parseInt(doctorsInput.value) * 0.6),
+            evening: Math.ceil(parseInt(doctorsInput.value) * 0.3),
+            night: Math.ceil(parseInt(doctorsInput.value) * 0.1)
+          },
+          nurses: {
+            day: Math.ceil(parseInt(nursesInput.value) * 0.5),
+            evening: Math.ceil(parseInt(nursesInput.value) * 0.3),
+            night: Math.ceil(parseInt(nursesInput.value) * 0.2)
+          }
+        },
+        duration_days: parseInt(simulationDurationInput.value)
+      };
+    }
+    
+    // Start simulation
+    function startSimulation() {
+      if (simulationRunning) return;
+      
+      // Reset simulator
+      createSimulator();
+      
+      // Update dashboard
+      if (dashboardIntegration) {
+        dashboardIntegration.destroy();
+        createDashboard();
+      }
+      
+      // Get simulation speed
+      const speed = parseInt(simulationSpeedSelect.value);
+      
+      // Start simulation
+      simulationRunning = true;
+      
+      // Emit start event
+      simulator.emit('simulationStart', { time: 0 });
+      
+      // Run simulation steps
+      simulationInterval = setInterval(() => {
+        // Run multiple steps based on speed
+        for (let i = 0; i < speed; i++) {
+          simulator.step();
+        }
+        
+        // Check if simulation is complete
+        if (simulator.currentTime >= simulator.config.duration_days * 24 * 60) {
+          stopSimulation();
+        }
+      }, 100);
+    }
+    
+    // Stop simulation
+    function stopSimulation() {
+      if (!simulationRunning) return;
+      
+      // Clear interval
+      if (simulationInterval) {
+        clearInterval(simulationInterval);
+        simulationInterval = null;
+      }
+      
+      // Emit end event
+      simulator.emit('simulationEnd', { time: simulator.currentTime });
+      
+      simulationRunning = false;
+    }
+    
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', initialize);
+  </script>
+</body>
+</html>
